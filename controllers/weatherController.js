@@ -24,11 +24,22 @@ exports.weather = async (req, res) => {
         const response = await axios.get(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${api_key}&units=${units}`);
         
         const temperature = response.data.main.temp;
+        let condition = response.data.weather[0].description;
+        if (condition.includes('cloud')) {
+            condition = 'Cloudy'
+        } else if (condition.includes('rain')) {
+            condition = 'Rainy'
+        } else if (condition.includes('clear')) {
+            condition = 'Sunny'
+        } else {
+            condition = 'Unknown'
+        }
+        // console.log(condition)
         
         const entry = {
             cityName: response.data.name,
             temperature: `${temperature} °C`,
-            condition: response.data.weather[0].description,
+            condition: condition,
             wind_speed: response.data.wind.speed+" m/s"
         };
 
@@ -44,7 +55,7 @@ exports.weather = async (req, res) => {
                 return res.status(404).json({
                     message: 'City not found'
                 });
-                
+
             } else if (error.response.status === 401) {
                 return res.status(401).json({
                     message: 'Invalid api_key'
