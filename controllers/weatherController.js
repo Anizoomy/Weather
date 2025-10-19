@@ -17,20 +17,25 @@ exports.weather = async (req, res) => {
             return res.status(400).json({
                 message: "Api key is required"
             })
-        };
+        }; 
 
         const units = "metric"
         
         const response = await axios.get(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${api_key}&units=${units}`);
         
         const temperature = response.data.main.temp;
+        
         let condition = response.data.weather[0].description;
+        
         if (condition.includes('cloud')) {
             condition = 'Cloudy'
+            
         } else if (condition.includes('rain')) {
             condition = 'Rainy'
+            
         } else if (condition.includes('clear')) {
             condition = 'Sunny'
+            
         } else {
             condition = 'Unknown'
         }
@@ -68,4 +73,4 @@ exports.weather = async (req, res) => {
         })
 
     }
-}   
+};
