@@ -73,4 +73,4 @@ exports.weather = async (req, res) => {
         })
 
     }
-};
+}   
