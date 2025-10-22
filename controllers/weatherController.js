@@ -17,7 +17,7 @@ exports.weather = async (req, res) => {
             return res.status(400).json({
                 message: "Api key is required"
             })
-        };
+        }; 
 
         const units = "metric"
         
@@ -45,7 +45,7 @@ exports.weather = async (req, res) => {
             cityName: response.data.name,
             temperature: `${temperature} °C`,
             condition: condition,
-            wind_speed: response.data.wind.speed+" m/s"
+            wind_speed: response.data.wind.speed
         };
 
          res.status(200).json({
