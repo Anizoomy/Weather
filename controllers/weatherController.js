@@ -4,8 +4,8 @@ const axios = require('axios');
 exports.weather = async (req, res) => {
     try {
         const {city} = req.query;
-
-        if(city === null){
+        
+         if(!city){
             return res.status(400).json({
                 message: "City name is required"
             })
@@ -13,7 +13,7 @@ exports.weather = async (req, res) => {
 
         const api_key = process.env.API_KEY;
 
-        if(api_key === null){
+        if(!api_key){
             return res.status(400).json({
                 message: "Api key is required"
             })
@@ -23,10 +23,10 @@ exports.weather = async (req, res) => {
         
         const response = await axios.get(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${api_key}&units=${units}`);
         
-        const temperature = response.data.main.temp;
-        
-        let condition = response.data.weather[0].description;
-        
+        const { name , main: { temp }, weather, wind: { speed: windSpeed} } = response.data;
+   
+        let condition = weather[0].description.toLowerCase();
+
         if (condition.includes('cloud')) {
             condition = 'Cloudy'
             
@@ -39,20 +39,20 @@ exports.weather = async (req, res) => {
         } else {
             condition = 'Unknown'
         }
-        // console.log(condition)
-        
+        //  console.log(condition)
+        // console.log('i am response data:', response.data)
         const entry = {
-            cityName: response.data.name,
-            temperature: `${temperature} °C`,
-            condition: condition,
-            wind_speed: response.data.wind.speed
+            cityName: name,
+            temperature: `${temp} °C`,
+            condition,
+            windSpeed: `${windSpeed} m/s`
         };
-
+// console.log(entry)
          res.status(200).json({
             message: "Weather data fetched successfully",
             data: entry
         })
-
+    
     } catch (error) {
         if(error.response) {
 
