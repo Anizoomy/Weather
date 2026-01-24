@@ -22,7 +22,8 @@ app.use('/', (req, res) => {
   res.send('Welcome to SkyPulse weather API');
 });
 
-mongoose.connect(process.env.MONGODB_URL)
+const DB = process.env.MONGODB_URL;
+mongoose.connect(DB)
 .then(() => {
     console.log('MongoDB connected');
     app.listen(PORT, () => {
